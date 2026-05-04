@@ -1,0 +1,59 @@
+[
+    {
+        "Model": "Logistic Regression",
+        "Accuracy": 0.524390243902439,
+        "Precision": 0.4146341463414634,
+        "Recall": 0.53125,
+        "F1-score": 0.4657534246575342,
+        "Weighted F1-score": 0.5301894897618252,
+        "Confusion Matrix": [
+            [
+                208,
+                192
+            ],
+            [
+                120,
+                136
+            ]
+        ],
+        "Classification Report": "              precision    recall  f1-score   support\n\n Not Potable       0.63      0.52      0.57       400\n     Potable       0.41      0.53      0.47       256\n\n    accuracy                           0.52       656\n   macro avg       0.52      0.53      0.52       656\nweighted avg       0.55      0.52      0.53       656\n"
+    },
+    {
+        "Model": "Decision Tree",
+        "Accuracy": 0.6478658536585366,
+        "Precision": 0.6033057851239669,
+        "Recall": 0.28515625,
+        "F1-score": 0.38726790450928383,
+        "Weighted F1-score": 0.6102394118027621,
+        "Confusion Matrix": [
+            [
+                352,
+                48
+            ],
+            [
+                183,
+                73
+            ]
+        ],
+        "Classification Report": "              precision    recall  f1-score   support\n\n Not Potable       0.66      0.88      0.75       400\n     Potable       0.60      0.29      0.39       256\n\n    accuracy                           0.65       656\n   macro avg       0.63      0.58      0.57       656\nweighted avg       0.64      0.65      0.61       656\n"
+    },
+    {
+        "Model": "Random Forest",
+        "Accuracy": 0.6737804878048781,
+        "Precision": 0.6944444444444444,
+        "Recall": 0.29296875,
+        "F1-score": 0.41208791208791207,
+        "Weighted F1-score": 0.6329255287267019,
+        "Confusion Matrix": [
+            [
+                367,
+                33
+            ],
+            [
+                181,
+                75
+            ]
+        ],
+        "Classification Report": "              precision    recall  f1-score   support\n\n Not Potable       0.67      0.92      0.77       400\n     Potable       0.69      0.29      0.41       256\n\n    accuracy                           0.67       656\n   macro avg       0.68      0.61      0.59       656\nweighted avg       0.68      0.67      0.63       656\n"
+    }
+]

@@ -1,0 +1,45 @@
+{
+    "best_model": "Random Forest",
+    "feature_names": [
+        "ph",
+        "Hardness",
+        "Solids",
+        "Chloramines",
+        "Sulfate",
+        "Conductivity",
+        "Organic_carbon",
+        "Trihalomethanes",
+        "Turbidity"
+    ],
+    "target_mapping": {
+        "0": "Not Potable",
+        "1": "Potable"
+    },
+    "selection_basis": "Highest Accuracy, then Weighted F1-score",
+    "results": [
+        {
+            "Model": "Random Forest",
+            "Accuracy": 0.6737804878048781,
+            "Precision": 0.6944444444444444,
+            "Recall": 0.29296875,
+            "F1-score": 0.41208791208791207,
+            "Weighted F1-score": 0.6329255287267019
+        },
+        {
+            "Model": "Decision Tree",
+            "Accuracy": 0.6478658536585366,
+            "Precision": 0.6033057851239669,
+            "Recall": 0.28515625,
+            "F1-score": 0.38726790450928383,
+            "Weighted F1-score": 0.6102394118027621
+        },
+        {
+            "Model": "Logistic Regression",
+            "Accuracy": 0.524390243902439,
+            "Precision": 0.4146341463414634,
+            "Recall": 0.53125,
+            "F1-score": 0.4657534246575342,
+            "Weighted F1-score": 0.5301894897618252
+        }
+    ]
+}
