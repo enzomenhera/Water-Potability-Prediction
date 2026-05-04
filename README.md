@@ -48,6 +48,4 @@ streamlit run app.py
 3. View the prediction and probability output.
 4. Review the model performance summary shown in the app.
 
-## Disclaimer
-
-This project is for academic demonstration only. It should not be used as a replacement for official laboratory testing or professional water quality assessment.
+PTF03 FINAL PROJECT
