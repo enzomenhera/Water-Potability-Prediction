@@ -32,15 +32,27 @@ FEATURE_LABELS = {
 }
 
 FEATURE_HELP = {
-    "ph": "Acidity or alkalinity of the water sample.",
-    "Hardness": "Concentration of minerals such as calcium and magnesium.",
-    "Solids": "Amount of dissolved solids in the sample.",
-    "Chloramines": "Disinfectant-related chemical measurement.",
-    "Sulfate": "Sulfate concentration in the water sample.",
-    "Conductivity": "Ability of the water to conduct electrical current.",
-    "Organic_carbon": "Amount of organic carbon present in the sample.",
-    "Trihalomethanes": "Chemical compounds that may form during disinfection.",
-    "Turbidity": "Cloudiness or haziness of the water sample.",
+    "ph": "Allowed range: 0 to 14",
+    "Hardness": "Allowed range: 50 to 350",
+    "Solids": "Allowed range: 300 to 70,000",
+    "Chloramines": "Allowed range: 0 to 15",
+    "Sulfate": "Allowed range: 100 to 500",
+    "Conductivity": "Allowed range: 100 to 800",
+    "Organic_carbon": "Allowed range: 2 to 30",
+    "Trihalomethanes": "Allowed range: 0 to 125",
+    "Turbidity": "Allowed range: 1 to 7",
+}
+
+FEATURE_LIMITS = {
+    "ph": (0.0, 14.0, 0.1),
+    "Hardness": (50.0, 350.0, 1.0),
+    "Solids": (300.0, 70000.0, 100.0),
+    "Chloramines": (0.0, 15.0, 0.1),
+    "Sulfate": (100.0, 500.0, 1.0),
+    "Conductivity": (100.0, 800.0, 1.0),
+    "Organic_carbon": (2.0, 30.0, 0.1),
+    "Trihalomethanes": (0.0, 125.0, 0.1),
+    "Turbidity": (1.0, 7.0, 0.1),
 }
 
 PRESETS = {
@@ -106,7 +118,7 @@ st.markdown(
         }
 
         .hero {
-            padding: 2.4rem 2.2rem;
+            padding: 2.35rem 2.2rem;
             border-radius: 30px;
             background:
                 radial-gradient(circle at top right, rgba(45, 212, 191, 0.32), transparent 32%),
@@ -228,6 +240,14 @@ st.markdown(
             font-weight: 700;
         }
 
+        .best-model {
+            font-size: 2rem;
+            font-weight: 900;
+            letter-spacing: -0.05em;
+            color: #0f172a;
+            margin-top: 0.15rem;
+        }
+
         .footer {
             color: #94a3b8;
             font-size: 0.82rem;
@@ -286,7 +306,7 @@ st.markdown(
 
 with st.sidebar:
     st.markdown("### Input Measurements")
-    st.caption("Choose a sample or enter your own water-quality values.")
+    st.caption("Enter values within the allowed range for each measurement.")
 
     sample_choice = st.selectbox(
         "Input preset",
@@ -296,20 +316,33 @@ with st.sidebar:
     def default_value(feature: str) -> float:
         return float(PRESETS[sample_choice][feature])
 
+    def bounded_number_input(feature: str) -> float:
+        min_value, max_value, step = FEATURE_LIMITS[feature]
+        value = default_value(feature)
+        value = max(min_value, min(value, max_value))
+        return st.number_input(
+            FEATURE_LABELS[feature],
+            min_value=min_value,
+            max_value=max_value,
+            value=value,
+            step=step,
+            help=FEATURE_HELP[feature],
+        )
+
     with st.expander("Basic water indicators", expanded=True):
-        ph = st.number_input("pH Level", min_value=0.0, max_value=14.0, value=default_value("ph"), step=0.1, help=FEATURE_HELP["ph"])
-        hardness = st.number_input("Hardness", min_value=0.0, value=default_value("Hardness"), step=1.0, help=FEATURE_HELP["Hardness"])
-        solids = st.number_input("Total Solids", min_value=0.0, value=default_value("Solids"), step=100.0, help=FEATURE_HELP["Solids"])
+        ph = bounded_number_input("ph")
+        hardness = bounded_number_input("Hardness")
+        solids = bounded_number_input("Solids")
 
     with st.expander("Chemical measurements", expanded=True):
-        chloramines = st.number_input("Chloramines", min_value=0.0, value=default_value("Chloramines"), step=0.1, help=FEATURE_HELP["Chloramines"])
-        sulfate = st.number_input("Sulfate", min_value=0.0, value=default_value("Sulfate"), step=1.0, help=FEATURE_HELP["Sulfate"])
-        conductivity = st.number_input("Conductivity", min_value=0.0, value=default_value("Conductivity"), step=1.0, help=FEATURE_HELP["Conductivity"])
+        chloramines = bounded_number_input("Chloramines")
+        sulfate = bounded_number_input("Sulfate")
+        conductivity = bounded_number_input("Conductivity")
 
     with st.expander("Additional indicators", expanded=False):
-        organic_carbon = st.number_input("Organic Carbon", min_value=0.0, value=default_value("Organic_carbon"), step=0.1, help=FEATURE_HELP["Organic_carbon"])
-        trihalomethanes = st.number_input("Trihalomethanes", min_value=0.0, value=default_value("Trihalomethanes"), step=0.1, help=FEATURE_HELP["Trihalomethanes"])
-        turbidity = st.number_input("Turbidity", min_value=0.0, value=default_value("Turbidity"), step=0.1, help=FEATURE_HELP["Turbidity"])
+        organic_carbon = bounded_number_input("Organic_carbon")
+        trihalomethanes = bounded_number_input("Trihalomethanes")
+        turbidity = bounded_number_input("Turbidity")
 
 inputs = {
     "ph": ph,
@@ -375,13 +408,6 @@ with main_col:
         prob_col1.metric("Potable Probability", f"{potable_probability:.2%}")
         prob_col2.metric("Not Potable Probability", f"{not_potable_probability:.2%}")
         st.progress(potable_probability, text="Potability probability score")
-
-        if 0.45 <= potable_probability <= 0.55:
-            st.info("The model probability is close to the decision boundary, so the prediction is less confident.")
-        elif prediction == 1:
-            st.success("The entered values are closer to patterns labeled as potable in the training dataset.")
-        else:
-            st.warning("The entered values are closer to patterns labeled as not potable in the training dataset.")
     else:
         st.markdown(
             """
@@ -394,6 +420,16 @@ with main_col:
         )
 
 with side_col:
+    st.markdown(
+        """
+        <div class="card">
+            <div class="section-label">Best Model</div>
+            <div class="best-model">Random Forest</div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
     st.markdown(
         """
         <div class="card">
